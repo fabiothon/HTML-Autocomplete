@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+input[type=text] {
+   width: 100%;
+   padding: 12px 20px;
+   margin: 8px 0;
+   box-sizing: border-box;
+   border: 1px solid #555;
+   outline: none;
+}
+</style>
+
+</head>
+<body>
+<br> <b><font size="3.5"> Bitte geben Sie Ihren Wohnort an.</font></b>
+<br>
+<br> <i>Zur Vermeidung von Tippfehler haben wir ein Wohnortnamenerkennungssystem in der Eingabemaske integriert. Nach Eingabe der ersten Buchstaben sollte der Name Ihrer Stadt erscheinen.</i>
+<br>
+<input type="text" placeholder="Wohnort" id="v_1766" name="v_1766">
+<br>
+<br>
+<br>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&key=API_KEY"></script>
+
+<script type="text/javascript">
+function AutoComplete() {
+    // Get the input field and initialize Google Places Autocomplete
+    var input1 = document.getElementById('v_1766');
+    var autocomplete = new google.maps.places.Autocomplete(input1, {
+        types: ['(regions)'],  // Restrict to regions (towns and cities)
+        componentRestrictions: { country: ['de', 'ch', 'at'] }  // Restriction for only the following countries: Germany, Switzerland, and Austria
+    });
+    var placeSelected = false;
+
+    // Listen for the place_changed event
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        var place = autocomplete.getPlace();
+        if (place.geometry) {
+            placeSelected = true;
+        } else {
+            input1.value = '';
+            placeSelected = false;
+            alert("Bitte wählen Sie einen Wohnort aus den Vorschlägen aus. Wenn Sie keine Angaben machen möchten, lassen Sie das Eingabefeld bitte leer.");
+        }
+    });
+
+    // Monitor the input field for changes
+    input1.addEventListener('input', function() {
+        placeSelected = false;
+    });
+
+    // Prevention for moving to the next question (click) if an invalid place is selected
+    document.addEventListener('click', function(event) {
+        if (!placeSelected && input1.value !== '') {
+            alert("Bitte wählen Sie einen Wohnort aus den Vorschlägen aus. Wenn Sie keine Angaben machen möchten, lassen Sie das Eingabefeld bitte leer.");
+            event.preventDefault();
+        }
+    }, true);
+}
+
+// Call for AutoComplete function
+google.maps.event.addDomListener(window, 'load', AutoComplete);
+</script>
+</body>
+</html>
